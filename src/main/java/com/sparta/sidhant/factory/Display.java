@@ -5,20 +5,37 @@ import com.sparta.sidhant.sorters.SorterInterface;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Display {
-
     public static void beginProgram() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Choose a sorting algorithm from the following (enter the number): " +
                 "\n1. Selection Sort" + "\n2. Binary sort" + "\n3. Bubble Sort" + "\n4. Merge Sort" +
                 "\n5. Quick Sort" + "\n6. Insertion sort");
-        int sorter =  scanner.nextInt();
-
-        if(sorter > 6) {
-            System.out.println("please enter a valid number:");
-            sorter = scanner.nextInt();
+//String input
+//        answer is 0 or greater then 6
+        int sorter;
+        while(true) {
+            String srt = scanner.nextLine();
+            Pattern digit = Pattern.compile(".*[0-9].*");
+            if(digit.matcher(srt).matches()){
+                sorter=Integer.parseInt(srt);
+                break;
+            }else{
+                System.out.println("Must fill only integer");
+            }
         }
+        while(true){
+
+            if(sorter > 6 || sorter <=0) {
+                System.out.println("please enter a valid number:");
+                sorter = scanner.nextInt();
+            }else{
+                break;
+            }
+        }
+
 
         SorterInterface requestedSorterInterface = getSorter(sorter);
         System.out.println("What is the size of the array you want to be sorted?");
@@ -30,9 +47,10 @@ public class Display {
         System.out.println(Arrays.toString(arrayToSort));
 
         Long start = System.nanoTime();
+        assert requestedSorterInterface != null;
         int[] sortedArray = requestedSorterInterface.sortArray(arrayToSort);
         Long finish = System.nanoTime();
-        Long totalTime = (finish - start);
+        long totalTime = (finish - start);
         System.out.println("Sorted array: ");
         System.out.println(Arrays.toString(sortedArray));
         System.out.println("time taken: " + totalTime + " nano seconds");
